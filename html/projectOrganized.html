@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mini-Projet - Gomoku</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #fdfdfd;
+        color: #333;
+        line-height: 1.8;
+        margin: 0;
+        padding: 30px;
+      }
+
+      header,
+      footer {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      h1 {
+        font-size: 2.2em;
+        color: #2c3e50;
+        margin-bottom: 10px;
+      }
+
+      h2 {
+        font-size: 1.5em;
+        color: #34495e;
+        margin-bottom: 20px;
+      }
+
+      main {
+        max-width: 950px;
+        margin: auto;
+      }
+
+      p {
+        margin: 15px 0;
+      }
+
+      figure {
+        margin: 30px auto;
+        text-align: center;
+      }
+
+      figure img {
+        max-width: 80%;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 5px;
+        background-color: white;
+      }
+
+      figcaption {
+        font-style: italic;
+        margin-top: 10px;
+        color: #555;
+      }
+
+      .info-section {
+        background-color: #f7faff;
+        padding: 20px;
+        border-radius: 5px;
+        margin-bottom: 30px;
+        box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);
+      }
+
+      .info-section h3 {
+        color: #2980b9;
+        margin-bottom: 10px;
+      }
+
+      section.question {
+        background-color: #fff;
+        padding: 15px 20px;
+        margin: 20px auto;
+        border-left: 5px solid #3498db;
+        border-radius: 4px;
+        box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      section.question strong {
+        display: block;
+        margin-bottom: 8px;
+        color: #2980b9;
+      }
+
+      a {
+        color: #1a73e8;
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      footer {
+        margin-top: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Mini-Projet</h1>
+      <h2>Exercice 1 <span lang="en">(Gomoku)</span></h2>
+    </header>
+
+    <main>
+      <!-- GAME DESCRIPTION -->
+      <section class="info-section">
+        <h3>Description du Jeu</h3>
+        <p>
+          <em>Gomoku</em> est un jeu sur une grille de
+          <strong>15 lignes</strong> et <strong>15 colonnes</strong>. Le but est
+          d’aligner <strong>5 jetons</strong> de la même couleur (ligne, colonne
+          ou diagonale).
+        </p>
+        <ul>
+          <li>Chaque joueur commence avec <strong>60 jetons</strong>.</li>
+          <li>
+            Le premier coup est sur la
+            <strong>case centrale obligatoire</strong>.
+          </li>
+          <li>
+            Les coups suivants doivent être adjacents (en 8-connectivité) à une
+            case occupée.
+          </li>
+        </ul>
+      </section>
+
+      <!-- STRUCTURE DESCRIPTION -->
+      <section class="info-section">
+        <h3>Structure de la Grille</h3>
+        <p>
+          La grille est représentée par une
+          <strong>matrice doublement chaînée</strong> avec
+          <strong>8 connexions</strong>. Chaque case a des références vers ses
+          <strong>8 cases voisines</strong>.
+        </p>
+        <p>La cohérence du maillage doit être maintenue :</p>
+        <ul>
+          <li>
+            Si la case D est ajoutée comme voisine de B, B devient aussi voisine
+            de D.
+          </li>
+          <li>
+            A (en ligne) et C (en colonne) sont aussi mises à jour comme
+            voisines de D.
+          </li>
+        </ul>
+        <p>
+          Chaque case maintient également la présence ou absence d’un jeton.
+        </p>
+      </section>
+
+      <!-- FIGURES -->
+      <figure>
+        <img
+          src="img/gorsel1.png"
+          alt="Illustration des liens entre les cases d’une grille 3x3"
+        />
+        <figcaption>
+          Figure 1 – Liens entre les cases d’une grille 3 × 3
+        </figcaption>
+      </figure>
+
+      <figure>
+        <img
+          src="img/gorsel2.png"
+          alt="Illustration des liens entre les cases d’une grille 3x3"
+        />
+        <figcaption>Figure 2 – Exemple d'ajout de voisinage</figcaption>
+      </figure>
+
+      <!-- QUESTIONS -->
+      <article>
+        <h3 style="color: #2c3e50; text-align: center">
+          Questions & Extensions
+        </h3>
+
+        <section class="question">
+          <strong>Question 1 (Structure) :</strong>
+          Créez les classes et méthodes nécessaires pour la structure décrite
+          (avec une énumération <code>EnumMap</code> pour stocker les voisins).
+        </section>
+
+        <section class="question">
+          <strong>Question 2 (Vérification) :</strong>
+          Ajoutez une méthode pour vérifier si une case est dans un alignement
+          de 4 jetons identiques. Pensez à la récursivité.
+        </section>
+
+        <section class="question">
+          <strong>Question 3 (Affichage) :</strong>
+          Implémentez l’affichage terminal avec des symboles Unicode et couleurs
+          ANSI.
+        </section>
+
+        <section class="question">
+          <strong>Question 4 (Généralisation) :</strong>
+          Paramétrez : dimension de la grille, nombre de jetons de départ,
+          nombre de jetons nécessaires pour gagner.
+        </section>
+
+        <section class="question">
+          <strong>Question 5 (Programme principal) :</strong>
+          Écrivez un programme principal pour deux joueurs, lecture des coups,
+          affichage continu, gestion des jetons.
+        </section>
+
+        <section class="question">
+          <strong>Question 6 (Sauvegarde et restauration) :</strong>
+          Implémentez les méthodes <code>save(Path)</code> et
+          <code>load(Path)</code> pour enregistrer et restaurer l'état du jeu.
+        </section>
+
+        <section class="question">
+          <strong>Question 7 (Bonus – IA) :</strong>
+          Implémentez une stratégie IA simple (éviter alignement adverse). Pour
+          plus de challenge, ajoutez l'algorithme Minimax.
+        </section>
+
+        <section class="question">
+          <strong>Question 8 (Bonus 2 – Grille infinie) :</strong>
+          Rendez la grille infinie : ajoutez lignes/colonnes dynamiquement si un
+          joueur atteint les bords.
+        </section>
+      </article>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>
+        📄 Documentation utile :
+        <a
+          href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/EnumMap.html"
+          target="_blank"
+        >
+          EnumMap Java Documentation
+        </a>
+      </p>
+      <p><a href="project.html">Original Version</a></p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mini-Projet - Gomoku</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f9f9f9;
+        color: #333;
+        line-height: 1.8;
+        margin: 0;
+        padding: 30px;
+      }
+
+      header,
+      footer {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      h1 {
+        font-size: 2.2em;
+        color: #2c3e50;
+        margin-bottom: 10px;
+      }
+
+      h2 {
+        font-size: 1.5em;
+        color: #34495e;
+        margin-bottom: 30px;
+      }
+
+      main {
+        max-width: 950px;
+        margin: auto;
+      }
+
+      p {
+        margin: 15px 0;
+      }
+
+      figure {
+        margin: 30px auto;
+        text-align: center;
+      }
+
+      figure img {
+        max-width: 80%;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 5px;
+        background-color: white;
+      }
+
+      figcaption {
+        font-style: italic;
+        margin-top: 10px;
+        color: #555;
+      }
+
+      section.question {
+        background-color: #fff;
+        padding: 15px 20px;
+        margin: 20px auto;
+        border-left: 5px solid #3498db;
+        border-radius: 4px;
+        box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      section.question strong {
+        display: block;
+        margin-bottom: 8px;
+        color: #2980b9;
+      }
+
+      a {
+        color: #1a73e8;
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      footer {
+        margin-top: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Mini-Projet</h1>
+      <h2>Exercice 1 <span lang="en">(Gomoku)</span></h2>
+    </header>
+
+    <main>
+      <section>
+        <p>
+          On se propose ici de réaliser une version du jeu <em>gomoku</em>. Ce
+          jeu se joue sur une grille de 15 lignes et 15 colonnes. Le but est
+          d’aligner cinq jetons de la même couleur, en ligne, colonne ou
+          diagonale. Les joueurs disposent initialement de 60 jetons chacun. Le
+          premier coup se fait obligatoirement sur la case centrale. Chaque
+          joueur joue ensuite à tour de rôle, en ajoutant un jeton sur une case
+          de son choix, avec la contrainte qu’elle doit être libre et adjacente
+          (en 8-connectivité) d’une case déjà occupée.
+        </p>
+
+        <p>
+          La grille sera représentée par une matrice doublement chaînée en
+          8-connectivité, c’est-à-dire que chaque case contiendra une référence
+          vers ses 8 cases voisines. Cette structure est illustrée figure 1.
+        </p>
+
+        <p>
+          En particulier, une case doit maintenir la cohérence du maillage de
+          ses voisines. Par exemple, dans l’exemple figure 2, le seul ajout de
+          la case <strong>D</strong> comme voisine (en diagonale) de
+          <strong>B</strong> doit associer <strong>B</strong> comme voisine de
+          <strong>D</strong> (réciproque), mais également
+          <strong>A</strong> comme voisine de <strong>D</strong> (en ligne) et
+          <strong>C</strong> comme voisine de <strong>D</strong> (en colonne),
+          et réciproquement.
+        </p>
+
+        <p>Une case maintient aussi la présence éventuelle d’un jeton.</p>
+      </section>
+
+      <figure>
+        <img
+          src="img/gorsel1.png"
+          alt="Illustration des liens entre les cases d’une grille 3x3"
+        />
+        <figcaption>
+          Figure 1 – Illustration des liens entre les cases d’une grille 3 × 3
+        </figcaption>
+      </figure>
+
+      <figure>
+        <img
+          src="img/gorsel2.png"
+          alt="Illustration des liens entre les cases d’une grille 3x3"
+        />
+        <figcaption>
+          Figure 2 – Illustration des liens entre les cases d’une grille 3 × 3
+        </figcaption>
+      </figure>
+
+      <!-- Questions Section -->
+      <article>
+        <section class="question">
+          <strong>Question 1 (Structure) :</strong>
+          Créer les différentes classes impliquées dans la structure décrite
+          précédemment. Vous ajouterez les différentes méthodes jugées utiles.
+          Créez une méthode d’initialisation de la grille. On pourra par exemple
+          utiliser une énumération pour les directions et une
+          <code>EnumMap</code> pour stocker les voisins.
+        </section>
+
+        <section class="question">
+          <strong>Question 2 (Vérification) :</strong>
+          Ajouter aux cases une méthode vérifiant si elle est dans un alignement
+          de 4 jetons de la même couleur qu’elle-même. Vous pourrez utiliser
+          judicieusement la récursivité.
+        </section>
+
+        <section class="question">
+          <strong>Question 3 (Affichage) :</strong>
+          Définir une méthode d’affichage de la grille dans un terminal. Vous
+          pourrez utiliser les symboles Unicode ainsi que les codes
+          d’échappement ANSI pour les couleurs.
+        </section>
+
+        <section class="question">
+          <strong>Question 4 (Généralisation) :</strong>
+          Rendez paramétrable la dimension de la grille, le nombre de jetons de
+          départ et le nombre de jetons à aligner pour gagner.
+        </section>
+
+        <section class="question">
+          <strong>Question 5 (Programme principal) :</strong>
+          Écrire un programme principal qui permet à deux joueurs ayant donné
+          leur nom de choisir leur couleur de jeton alternativement. Le
+          programme affiche l’état courant de la grille, puis lit la ligne et la
+          colonne du joueur courant. Si ce joueur ne peut pas positionner son
+          jeton, car il n’y a pas de cases adjacentes et qu’il reste des jetons,
+          etc.
+        </section>
+
+        <section class="question">
+          <strong>Question 6 (Sauvegarde et restauration) :</strong>
+          Créer deux méthodes symétriques <code>save(Path)</code> et
+          <code>load(Path)</code>, permettant d’enregistrer l’état courant de la
+          partie dans un fichier texte (vous pourrez utiliser Java NIO). On
+          pourra ainsi reprendre une partie en cours.
+        </section>
+
+        <section class="question">
+          <strong>Question 7 (Bonus) :</strong>
+          Implémenter une stratégie pour le joueur, afin de ne pouvoir jouer
+          contre l’ordinateur. Vous pourrez utiliser une heuristique simple (par
+          exemple pour éviter un alignement adverse). Pour les plus courageux,
+          il est également possible d’utiliser l’algorithme Minimax.
+        </section>
+
+        <section class="question">
+          <strong>Question 8 (Bonus 2) :</strong>
+          Rendez le jeu infini : le nombre de jetons à disposition n’est plus
+          limité et un joueur peut aussi être positionné en limite de grille,
+          une nouvelle ligne ou colonne est alors ajoutée pour étendre la
+          grille.
+        </section>
+      </article>
+    </main>
+
+    <footer>
+      <p>
+        Documentation utile :
+        <a
+          href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/EnumMap.html"
+          target="_blank"
+          >EnumMap Java Documentation</a
+        >
+      </p>
+      <p><a href="projectOrganized.html">More organzized explanation</a></p>
+    </footer>
+  </body>
+</html>
