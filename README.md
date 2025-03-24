@@ -111,8 +111,8 @@ You can easily adjust:
 
 For a detailed explanation of the game structure and each feature, refer to:
 
-- [Organized Project Explanation](projectOrganized.html)
-- [Original Project Description](project.html)
+- [Organized Project Explanation](html/projectOrganized.html)
+- [Original Project Description](html/project.html)
 
 ---
 
