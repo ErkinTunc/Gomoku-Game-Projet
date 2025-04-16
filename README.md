@@ -1,25 +1,25 @@
-
 # Gomoku Mini-Project
 
 ## Overview
 
-This project implements a terminal-based version of the classic strategy game **Gomoku** (also known as Five in a Row). The game is played on a grid where two players alternately place tokens, aiming to align a set number of tokens in a row, column, or diagonal to win. The project focuses on advanced data structures and algorithmic strategies, including:
+This project implements a terminal-based version of the classic strategy game **Gomoku** (also known as Five in a Row). The game is played on a grid where two players alternately place tokens, aiming to align a set number of tokens in a row, column, or diagonal to win. The project focuses on data structures and algorithmic strategies, including:
 
-- A doubly-linked grid structure with 8-connectivity.
+- A 2D array-based grid with directional links.
 - Recursive verification of winning conditions.
 - Dynamic customization of game parameters.
-- Save/load functionality using Java NIO.
-- Optional AI strategy and infinite grid extension.
+- Save/load functionality using Java NIO (to be implemented).
+- AI strategy (coming soon).
+- Dynamic grid expansion when full.
 
 ---
 
 ## Game Rules
 
-- Grid size: **15x15 by default**.
+- Grid size: **15x15 by default** (must be an odd number).
 - Each player starts with **60 tokens**.
-- First move **must be in the central cell**.
+- First move **must be placed in the central cell**.
 - All subsequent moves must be placed in a free cell **adjacent (8-connectivity)** to an occupied cell.
-- The objective: **Align 5 tokens** of the same color.
+- The objective: **Align N tokens** of the same color (default is 5).
 
 ---
 
@@ -27,49 +27,55 @@ This project implements a terminal-based version of the classic strategy game **
 
 ### ✔️ Grid Structure
 
-- The board is implemented as a **doubly-linked matrix** where each cell holds references to its 8 neighboring cells.
-- Each move updates neighboring relationships, ensuring bidirectional and consistent connectivity.
+- The board is implemented as a **2D array** (`Piece[][]`).
+- Each placed piece holds references to its 8 neighbors using an `EnumMap<Direction, Piece>`, allowing directional traversal and efficient win-checking.
 
 ### ✔️ Token Placement Verification
 
-- A recursive method checks whether a cell is part of an alignment of 4 matching tokens in any direction.
+- A recursive algorithm checks whether the latest move completes an alignment in any direction.
+- Victory is declared if a required number of same-colored pieces are connected.
 
 ### ✔️ Terminal Display
 
-- The grid is displayed in the terminal using **Unicode symbols** and **ANSI color codes** for clear visual feedback.
+- The grid is displayed in the terminal using `X` for black pieces, `O` for white pieces, and empty cells.
+- Uses clean ASCII formatting for visual feedback.
 
 ### ✔️ Parameter Customization
 
-You can easily adjust:
+In-game settings allow you to customize:
 
-- Grid dimensions.
-- Number of starting tokens per player.
-- Number of tokens required to win.
+- Grid dimensions (must be an odd number).
+- Number of tokens each player starts with.
+- Required number of tokens to win.
 
-### ✔️ Save & Load Game State
+### ✔️ Save & Load Game State (To Be Implemented)
 
-- Supports saving and restoring game progress via:
+- Future support for saving and restoring game state using:
   ```java
   void save(Path filePath);
   void load(Path filePath);
   ```
+- Will use **Java NIO** for efficient file I/O.
 
-### ✔️ AI Strategy (Bonus)
+### ✔️ Dynamic Grid Expansion
 
-- Implements a basic AI strategy to block the opponent’s potential alignments.
-- Optional: Minimax algorithm can be integrated for a more challenging AI.
+- When the current grid is full, a new grid of size `2n x 2n` is created (n being the current odd size).
+- All existing pieces are re-centered in the new grid.
+- This allows continued gameplay without hard limits on board size.
 
-### ✔️ Infinite Grid Expansion (Bonus)
+### ✔️ AI Strategy (Coming Soon)
 
-- The grid can dynamically expand by adding rows or columns when players reach the grid's edges.
-- The token count becomes unlimited in this mode.
+- The menu already includes a "Play Against Computer" option.
+- Future updates will introduce:
+  - Basic AI (blocking opponent alignments).
+  - Optional: Minimax algorithm for smarter play.
 
 ---
 
 ## Requirements
 
 - **Java 11+**
-- No external dependencies (Standard Java libraries)
+- No external dependencies (uses only Java Standard Library)
 
 ---
 
@@ -80,30 +86,31 @@ You can easily adjust:
    javac *.java
    ```
 
-2. Run the main program:
+2. Run the game:
    ```bash
-   java Main
+   java Gomoku
    ```
 
-3. Follow on-screen instructions to:
-
-   - Enter player names.
-   - Select token colors.
-   - Input desired grid position (row, column).
-   - Save/load the game if needed.
+3. Main menu options:
+   - Start New Game (2 Players)
+   - Play Against Computer *(AI coming soon)*
+   - Change Settings (grid size, win length, token count)
+   - Exit
 
 ---
 
 ## Project Structure
 
-| Component             | Description                                                                          |
-|----------------------|--------------------------------------------------------------------------------------|
-| `Cell`                | Represents a grid cell, with references to 8 neighbors and token status.              |
-| `Grid`                | Manages grid initialization, display, and updates.                                   |
-| `Player`              | Contains player information (name, color, tokens left).                              |
-| `Main`                | Handles game flow, input/output, and player turns.                                   |
-| `AIPlayer` (optional) | Implements AI behavior (basic strategy / Minimax).                                   |
-| `SaveManager`         | Provides save/load functionalities using Java NIO.                                   |
+| Component             | Description                                                                 |
+|----------------------|-----------------------------------------------------------------------------|
+| `Piece`              | Represents a game token with neighbor links in 8 directions.                |
+| `Grid`               | Manages piece placement, win checking, expansion, and display.              |
+| `Direction`          | Enum for the 8 compass directions, with dx/dy and opposites.                |
+| `Player`             | Abstract base class for players (name, color, tokens).                      |
+| `Human`              | Terminal-controlled human player class.                                     |
+| `Gomoku`             | Controls game loop, settings, flow, and player initialization.              |
+| `SaveManager`        | *(Planned)* Will handle saving/loading game state to file.                  |
+| `AIPlayer`           | *(Planned)* Will implement automated moves for computer player.             |
 
 ---
 
