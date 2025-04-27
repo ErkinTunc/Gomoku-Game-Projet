@@ -151,21 +151,33 @@ Or simply use:
 
 ```
 Gomoku-Game-Projet/
-├── .vscode/
+├── .vscode/                    # VSCode settings (optional)
 ├── Gomoku/
-│   ├── data/
+│   ├── generateDocs.bat         # Windows: Generate JavaDoc
+│   ├── generateDocs.sh          # Linux/Mac: Generate JavaDoc
+│   ├── runGomoku.bat            # Windows: Compile and Run Gomoku
+│   ├── runGomoku.sh             # Linux/Mac: Compile and Run Gomoku
+│   ├── pom.xml                  # Maven configuration (optional)
+│   ├── data/                    # Saved games
+│   │   └── ErkinVsAI.dat
 │   ├── src/
-│   ├── target/
-│   ├── runGomoku.bat / runGomoku.sh
-│   ├── generateDocs.bat / generateDocs.sh
-│   └── pom.xml
-├── html/
-│   ├── project.html
-│   ├── project-en.html
-│   └── img/
-├── rapport/
+│   │   ├── main/
+│   │   │   └── java/
+│   │   │       ├── ai/           # AI logic
+│   │   │       ├── app/          # Main application
+│   │   │       │   └── Gomoku.java
+│   │   │       ├── model/        # Game models (pieces, grid, players)
+│   │   │       ├── save/         # Save/Load manager
+│   │   │       └── util/         # Utilities
+│   │   └── test/                 # (reserved for future test cases)
+│   │       └── java/
+│   └── target/
+│       ├── classes/              # Compiled .class files
+├── html/                         # Project descriptions (HTML)
+├── rapport/                      # Final project report (LaTeX)
 │   └── rapport.tex
-└── README.md
+├── README.md                      # This documentation
+└── .gitignore                     # Git rules
 ```
 
 ---
