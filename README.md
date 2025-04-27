@@ -2,131 +2,179 @@
 
 ## Overview
 
-This project implements a terminal-based version of the classic strategy game **Gomoku** (also known as Five in a Row). The game is played on a grid where two players alternately place tokens, aiming to align a set number of tokens in a row, column, or diagonal to win. The project focuses on data structures and algorithmic strategies, including:
+This project implements a terminal-based version of the classic strategy game **Gomoku** (Five in a Row).  
+Players compete on a dynamically expandable grid to align pieces horizontally, vertically, or diagonally.
 
-- A 2D array-based grid with directional links.
-- Recursive verification of winning conditions.
-- Dynamic customization of game parameters.
-- Save/load functionality using Java NIO (to be implemented).
-- AI strategy (coming soon).
-- Dynamic grid expansion when full.
+This project demonstrates strong Object-Oriented Design, Recursive Win Checking, Serialization-based Save/Load, AI opponent play, and Dynamic Game Expansion.
 
 ---
 
 ## Game Rules
 
-- Grid size: **15x15 by default** (must be an odd number).
+- Grid size: **15x15** by default (must be an odd number).
 - Each player starts with **60 tokens**.
-- First move **must be placed in the central cell**.
-- All subsequent moves must be placed in a free cell **adjacent (8-connectivity)** to an occupied cell.
-- The objective: **Align N tokens** of the same color (default is 5).
+- First move **must be placed in the center** of the grid.
+- Every next move must be placed **adjacent** to existing pieces (8 directions).
+- Objective: **Align N pieces** (default N = 4) in any direction to win.
 
 ---
 
 ## Features
 
-### ✔️ Grid Structure
+### ✔️ Grid & Piece System
+- 2D array structure (`Piece[][]`) with neighbor links via `EnumMap<Direction, Piece>`.
+- Efficient win checking in 8 directions using recursion.
 
-- The board is implemented as a **2D array** (`Piece[][]`).
-- Each placed piece holds references to its 8 neighbors using an `EnumMap<Direction, Piece>`, allowing directional traversal and efficient win-checking.
+### ✔️ Dynamic Settings
+- Customize:
+  - Grid Size
+  - Win Condition Length
+  - Player Token Count
+  - Enable/Disable Expandable Grid
 
-### ✔️ Token Placement Verification
+### ✔️ Save & Load Functionality
+- Save the game anytime.
+- Load saved games from the `/data/` folder.
+- Save files are serialized `.dat` files.
 
-- A recursive algorithm checks whether the latest move completes an alignment in any direction.
-- Victory is declared if a required number of same-colored pieces are connected.
+### ✔️ AI Opponent
+- Play against an AI (`AIPlayer`).
+- AI evaluates board state and blocks opponent threats.
 
-### ✔️ Terminal Display
+### ✔️ Expandable Grid
+- Grid automatically expands when full (to `2n-1 x 2n-1`).
+- Existing pieces are repositioned in the center.
 
-- The grid is displayed in the terminal using `X` for black pieces, `O` for white pieces, and empty cells.
-- Uses clean ASCII formatting for visual feedback.
-
-### ✔️ Parameter Customization
-
-In-game settings allow you to customize:
-
-- Grid dimensions (must be an odd number).
-- Number of tokens each player starts with.
-- Required number of tokens to win.
-
-### ✔️ Save & Load Game State (To Be Implemented)
-
-- Future support for saving and restoring game state using:
-  ```java
-  void save(Path filePath);
-  void load(Path filePath);
-  ```
-- Will use **Java NIO** for efficient file I/O.
-
-### ✔️ Dynamic Grid Expansion
-
-- When the current grid is full, a new grid of size `2n x 2n` is created (n being the current odd size).
-- All existing pieces are re-centered in the new grid.
-- This allows continued gameplay without hard limits on board size.
-
-### ✔️ AI Strategy (Coming Soon)
-
-- The menu already includes a "Play Against Computer" option.
-- Future updates will introduce:
-  - Basic AI (blocking opponent alignments).
-  - Optional: Minimax algorithm for smarter play.
+### ✔️ Terminal User Interface
+- Clear, colored prompts and grids using ANSI codes.
+- Mid-turn Save/Exit options.
 
 ---
 
 ## Requirements
 
-- **Java 11+**
-- No external dependencies (uses only Java Standard Library)
+- **Java 11 or higher**
+- No external libraries — built entirely with Java Standard Library.
 
 ---
 
-## Usage
+## 📂 Project Structure
 
-1. Compile the Java classes:
-   ```bash
-   javac *.java
-   ```
+### `model/` - Game Model Classes
+| Class         | Description |
+|---------------|-------------|
+| `Piece`       | Represents a piece on the board with links to neighbors. |
+| `Grid`        | Manages the board: placement, expansion, and display. |
+| `Player`      | Abstract class defining common player properties. |
+| `Human`       | Subclass of Player; manages human player's moves. |
+| `Direction`   | Enum defining 8 compass directions and their utilities. |
 
-2. Run the game:
-   ```bash
-   java Gomoku
-   ```
+### `ai/` - AI Player
+| Class          | Description |
+|----------------|-------------|
+| `AIPlayer`     | AI opponent that evaluates threats and opportunities. |
 
-3. Main menu options:
-   - Start New Game (2 Players)
-   - Play Against Computer *(AI coming soon)*
-   - Change Settings (grid size, win length, token count)
-   - Exit
+### `save/` - Saving and Loading
+| Class           | Description |
+|-----------------|-------------|
+| `SaveManager`   | Manages saving and loading games with serialization. |
 
----
+### `util/` - Utilities
+| Class               | Description |
+|---------------------|-------------|
+| `ColorInConsole`     | Utility for colored text outputs. |
+| `convertToJavaStringLiteral` | Utility to help format console output. |
 
-## Project Structure
-
-| Component             | Description                                                                 |
-|----------------------|-----------------------------------------------------------------------------|
-| `Piece`              | Represents a game token with neighbor links in 8 directions.                |
-| `Grid`               | Manages piece placement, win checking, expansion, and display.              |
-| `Direction`          | Enum for the 8 compass directions, with dx/dy and opposites.                |
-| `Player`             | Abstract base class for players (name, color, tokens).                      |
-| `Human`              | Terminal-controlled human player class.                                     |
-| `Gomoku`             | Controls game loop, settings, flow, and player initialization.              |
-| `SaveManager`        | *(Planned)* Will handle saving/loading game state to file.                  |
-| `AIPlayer`           | *(Planned)* Will implement automated moves for computer player.             |
-
----
-
-## Documentation
-
-For a detailed explanation of the game structure and each feature, refer to:
-
-- [📖 Organized Project Explanation](./html/projectOrganized.html)
-- [📄 Original Project Description](./html/project.html)
+### `app/` - Main Application
+| Class    | Description |
+|----------|-------------|
+| `Gomoku` | Controls game flow, settings, menus, and main loop. |
 
 ---
 
-## Useful References
+## 📁 Other Important Files
 
-- 📄 [EnumMap Java Documentation](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/EnumMap.html)
+| File                     | Purpose |
+|---------------------------|---------|
+| `README.md`               | This document — explaining the game, structure, how to run. |
+| `runGomoku.bat` / `runGomoku.sh` | Scripts to **compile** and **run** the Gomoku game easily from terminal. |
+| `generateDocs.bat` / `generateDocs.sh` | Scripts to **generate JavaDoc documentation** (HTML docs of your classes). |
+| `data/` (folder)          | Stores all **saved game** files (`.dat`) created during gameplay. |
+| `target/classes/` (folder) | Stores **compiled `.class` files** after you compile your project. |
 
 ---
 
-**Happy Coding & Enjoy Playing Gomoku! 🎮**
+### 📜 About Scripts:
+
+- **`runGomoku.bat`** (Windows) and **`runGomoku.sh`** (Linux/macOS):
+  - Automatically compile all Java source files under `src/main/java/`
+  - Output compiled `.class` files into `target/classes/`
+  - Run the Gomoku game (`app.Gomoku`)
+
+- **`generateDocs.bat`** (Windows) and **`generateDocs.sh`** (Linux/macOS):
+  - Use `javadoc` to generate HTML documentation of your source code
+  - Output the documentation into the `/doc/` folder
+  - Useful for browsing your project architecture visually via browser
+
+---
+
+## How to Compile and Run
+
+1. Open terminal inside project root.
+
+2. Compile:
+
+```bash
+javac -d target/classes src/main/java/model/*.java src/main/java/util/*.java src/main/java/ai/*.java src/main/java/save/*.java src/main/java/app/*.java
+```
+
+3. Run:
+
+```bash
+java -cp target/classes app.Gomoku
+```
+
+Or simply use:
+- `runGomoku.bat` (for Windows)
+- `runGomoku.sh` (for Linux/macOS)
+
+---
+
+## Save Files
+
+- Saved games are stored inside the `/data/` directory automatically.
+- Filenames are user-specified during saving (example: `myEpicGame.dat`).
+
+---
+
+## 📁 Visual Project Structure
+
+```
+Gomoku-Game-Projet/
+├── .vscode/
+├── Gomoku/
+│   ├── data/
+│   ├── src/
+│   ├── target/
+│   ├── runGomoku.bat / runGomoku.sh
+│   ├── generateDocs.bat / generateDocs.sh
+│   └── pom.xml
+├── html/
+│   ├── project.html
+│   ├── project-en.html
+│   └── img/
+├── rapport/
+│   └── rapport.tex
+└── README.md
+```
+
+---
+
+## Author
+
+- **Erkin Tunç Boya**  
+*(Gomoku Project 2025 April-Mai)*
+
+---
+
+# 🎮 Enjoy Playing Gomoku and Good Luck! 🎮
