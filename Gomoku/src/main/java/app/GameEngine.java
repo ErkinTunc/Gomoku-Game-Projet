@@ -169,7 +169,7 @@ public class GameEngine {
                                     + "You have " + currentPlayer.getPieceNum() + " pieces left." + "\n"
                                     + "Win length: " + winLength + ColorInConsole.Reset ;
 
-        currentInfoString = convertToJavaStringLiteral.addTabToEachLine(currentInfoString);
+        currentInfoString = ConvertToJavaStringLiteral.addTabToEachLine(currentInfoString);
         System.out.println(currentInfoString);
     
         // Display mid-turn options
@@ -178,7 +178,7 @@ public class GameEngine {
                                     + "3. Exit to main menu" + "\n"
                                     + ColorInConsole.BrightBlack + "Choose an option: " + ColorInConsole.Reset;
 
-        midTurmOptionsString = convertToJavaStringLiteral.addTabToEachLine(midTurmOptionsString);
+        midTurmOptionsString = ConvertToJavaStringLiteral.addTabToEachLine(midTurmOptionsString);
         System.out.print(midTurmOptionsString);                        
         
         String option = scanner.nextLine().trim();

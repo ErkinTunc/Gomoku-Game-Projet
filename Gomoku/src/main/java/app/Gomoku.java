@@ -131,7 +131,7 @@ public class Gomoku {
                 + "5. Exit\n"
                 + ColorInConsole.BrightBlack + "Choose an option: " + ColorInConsole.Reset;
 
-        mainMenu = convertToJavaStringLiteral.addTabToEachLine(mainMenu);
+        mainMenu = ConvertToJavaStringLiteral.addTabToEachLine(mainMenu);
         // asciiArtLogo asciiArtLogo = convertToJavaStringLiteral.addTabToEachLine(asciiArtLogo);
 
         while (true) {
@@ -296,8 +296,8 @@ public class Gomoku {
                                 + "=====================================\n"
                                 + ColorInConsole.BrightBlack + "Choose an option: " + ColorInConsole.Reset;
 
-            curentSettings = convertToJavaStringLiteral.addTabToEachLine(curentSettings);
-            settingsMenu = convertToJavaStringLiteral.addTabToEachLine(settingsMenu);
+            curentSettings = ConvertToJavaStringLiteral.addTabToEachLine(curentSettings);
+            settingsMenu = ConvertToJavaStringLiteral.addTabToEachLine(settingsMenu);
 
             ColorInConsole.clearScreen(); // Clear the console
 
