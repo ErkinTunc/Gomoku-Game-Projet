@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Gomoku Project - Enhanced Organization</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 20px auto;
+        max-width: 900px;
+      }
+      h2,
+      h3 {
+        color: #34495e;
+      }
+      .section {
+        background: #f7faff;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+      }
+      details {
+        margin-bottom: 10px;
+      }
+      summary {
+        cursor: pointer;
+        font-weight: bold;
+        color: #2980b9;
+      }
+      nav {
+        margin-bottom: 20px;
+      }
+      nav a {
+        margin-right: 15px;
+        color: #2980b9;
+        text-decoration: none;
+      }
+      nav a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Gomoku Project - Enhanced Organization</h1>
+    </header>
+
+    <nav>
+      <a href="#description">Game Description</a>
+      <a href="#structure">Grid Structure</a>
+      <a href="#questions">Questions & Extensions</a>
+    </nav>
+
+    <section id="description" class="section">
+      <h2>1. Game Description</h2>
+      <ul>
+        <li>15x15 Grid, 5 tokens alignment needed to win.</li>
+        <li>60 tokens each, first move center compulsory.</li>
+        <li>Moves must be adjacent (8-connectivity).</li>
+      </ul>
+    </section>
+
+    <section id="structure" class="section">
+      <h2>2. Grid Structure</h2>
+      <ul>
+        <li>Doubly linked matrix with 8 neighbors each.</li>
+        <li>Neighbor updates must maintain reciprocal links.</li>
+        <li>Each cell tracks token presence.</li>
+      </ul>
+    </section>
+
+    <section id="questions" class="section">
+      <h2>3. Questions & Extensions</h2>
+      <details>
+        <summary>Question 1 - Structure Implementation</summary>
+        <p>Create classes and EnumMap structure.</p>
+      </details>
+      <details>
+        <summary>Question 2 - Alignment Check</summary>
+        <p>Recursive check for 4-token alignments.</p>
+      </details>
+      <details>
+        <summary>Question 3 - Terminal Display</summary>
+        <p>Display with Unicode and ANSI color codes.</p>
+      </details>
+      <details>
+        <summary>Question 4 - Parameterization</summary>
+        <p>Make grid size, tokens count, and win condition configurable.</p>
+      </details>
+      <details>
+        <summary>Question 5 - Main Program</summary>
+        <p>Interactive two-player mode with current state display.</p>
+      </details>
+      <details>
+        <summary>Question 6 - Save & Load</summary>
+        <p>Implement state persistence with Java NIO.</p>
+      </details>
+      <details>
+        <summary>Question 7 - AI Strategy (Bonus)</summary>
+        <p>Simple heuristic or Minimax algorithm.</p>
+      </details>
+      <details>
+        <summary>Question 8 - Infinite Grid (Bonus)</summary>
+        <p>Dynamically expand grid boundaries.</p>
+      </details>
+    </section>
+
+    <footer>
+      <p>
+        Useful Documentation:
+        <a
+          href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/EnumMap.html"
+          >EnumMap Java Documentation</a
+        >
+      </p>
+    </footer>
+  </body>
+</html>
