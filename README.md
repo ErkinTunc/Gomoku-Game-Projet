@@ -60,35 +60,36 @@ This project demonstrates strong Object-Oriented Design, Recursive Win Checking,
 
 ## 📂 Project Structure
 
-### `model/` - Game Model Classes
-| Class         | Description |
-|---------------|-------------|
-| `Piece`       | Represents a piece on the board with links to neighbors. |
-| `Grid`        | Manages the board: placement, expansion, and display. |
-| `Player`      | Abstract class defining common player properties. |
-| `Human`       | Subclass of Player; manages human player's moves. |
-| `Direction`   | Enum defining 8 compass directions and their utilities. |
+### `app/` - Application Entry and Main Flow
+| Class        | Description |
+|--------------|-------------|
+| `Gomoku`     | Controls the main menu, user navigation, settings menu, and game launching. |
+| `GameEngine` | Manages the entire gameplay logic including players, moves, grid expansion, and win detection. |
 
-### `ai/` - AI Player
-| Class          | Description |
-|----------------|-------------|
-| `AIPlayer`     | AI opponent that evaluates threats and opportunities. |
+### `model/` - Core Game Model
+| Class        | Description |
+|--------------|-------------|
+| `Piece`      | Represents a piece placed on the board. |
+| `Grid`       | Manages the 2D grid structure, piece placement, and expansion. |
+| `Player`     | Abstract class defining basic player behavior. |
+| `Human`      | Concrete class for a human player with user input handling. |
+| `Direction`  | Enum representing the 8 possible directions on the grid (N, NE, E, etc.). |
 
-### `save/` - Saving and Loading
-| Class           | Description |
-|-----------------|-------------|
-| `SaveManager`   | Manages saving and loading games with serialization. |
+### `ai/` - Artificial Intelligence
+| Class        | Description |
+|--------------|-------------|
+| `AIPlayer`   | Computer-controlled player with simple move evaluation strategy. |
+
+### `save/` - Save/Load System
+| Class        | Description |
+|--------------|-------------|
+| `SaveManager`| Handles saving and loading game states using serialization. |
 
 ### `util/` - Utilities
-| Class               | Description |
-|---------------------|-------------|
-| `ColorInConsole`     | Utility for colored text outputs. |
-| `convertToJavaStringLiteral` | Utility to help format console output. |
-
-### `app/` - Main Application
-| Class    | Description |
-|----------|-------------|
-| `Gomoku` | Controls game flow, settings, menus, and main loop. |
+| Class                | Description |
+|----------------------|-------------|
+| `ColorInConsole`      | Provides ANSI color codes for styled terminal output. |
+| `ConvertToJavaStringLiteral` | Formats text for easier console printing with tabs and line breaks. |
 
 ---
 
