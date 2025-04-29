@@ -61,81 +61,82 @@
 \begin{center}
 \Huge{Projet Gomoku}\\[0.5cm]
 \Large{Erkin Tunc Boya}\\[0.2cm]
-\Large{Avril - Mai 2025}
+\Large{Mai-Avril 2025}
 \end{center}
 
 \section{Structure du Projet}
 
-Le projet Gomoku suit une architecture orientée objet organisée en plusieurs dossiers ayant chacun une responsabilité spécifique :
+Pour organiser notre travail, on a opté pour une architecture en plusieurs dossiers, chacun ayant un rôle assez précis. Voici un rapide tour d'horizon :
 
 \begin{itemize}
-    \item \textbf{app/} : Gère le flux général du jeu, en orchestrant l'ensemble des fonctionnalités principales telles que l'initialisation du jeu, l'interface utilisateur et l'utilisation des modules de sauvegarde et utilitaires.
-    \item \textbf{model/} : Définit et maintient les données fondamentales du jeu, telles que la grille, les jetons, les joueurs, leurs interactions et les relations spatiales (directions).
-    \item \textbf{ai/} : Implémente les mécanismes d'intelligence artificielle permettant à un joueur de jouer contre l'ordinateur.
-    \item \textbf{save/} : Permet d'enregistrer et de restaurer l'état d'une partie en cours. Les classes de ce dossier sont utilisées principalement dans le flux du jeu (\texttt{app/}).
-    \item \textbf{util/} : Fournit des outils pour améliorer l'affichage et la lisibilité du jeu dans le terminal. Ces utilitaires sont également utilisés par les classes du \texttt{app/}.
+    \item \textbf{app/} : C'est ici que tout commence. Ce dossier s'occupe de coordonner le déroulement du jeu : mise en place de la partie, affichage terminal, appels aux fonctions de sauvegarde, etc. Un peu le "chef d'orchestre" du projet.
+    \item \textbf{model/} : Ici, on trouve les classes qui décrivent le cœur du jeu : la grille, les jetons, les joueurs... et surtout la façon dont tout ce petit monde interagit entre eux.
+    \item \textbf{ai/} : Ce dossier contient tout ce qui touche à l'intelligence artificielle. Rien de très poussé, mais suffisant pour donner un peu de fil à retordre au joueur humain.
+    \item \textbf{save/} : Les fonctions qui permettent d'enregistrer ou de reprendre une partie en cours. On s'appuie sur la sérialisation pour garder l'état du jeu.
+    \item \textbf{util/} : Quelques utilitaires pratiques pour améliorer l'affichage en console, notamment pour gérer les couleurs et les styles.
 \end{itemize}
 
-\section{Fonctionnalités du Projet}
+On a essayé de garder une organisation simple et cohérente, pour s'y retrouver facilement même après plusieurs jours sans toucher au code.
 
-Le projet Gomoku propose les fonctionnalités suivantes :
+\section{Fonctionnalit\'es du Projet}
+
+Notre version de Gomoku propose plusieurs options sympa :
 
 \begin{itemize}
-    \item Grille dynamique pouvant s'agrandir automatiquement.
-    \item Vérification récursive efficace des alignements dans toutes les directions.
-    \item Intelligence Artificielle simple pour jouer contre l'ordinateur.
-    \item Sauvegarde et chargement des parties grâce à la sérialisation.
-    \item Interface utilisateur en terminal avec affichage clair et en couleur.
-    \item Paramètres dynamiques permettant de personnaliser la taille de grille, le nombre de jetons requis pour gagner et le nombre de jetons initiaux.
+    \item Grille dynamique qui peut s'agrandir si besoin.
+    \item V\'erification efficace des alignements (lignes, colonnes, diagonales).
+    \item Joueur contre IA de base.
+    \item Sauvegarde et reprise de partie.
+    \item Interface terminal avec des couleurs pour plus de clart\'e.
+    \item Possibilit\'e de personnaliser la taille de la grille et le nombre de pions \`a aligner.
 \end{itemize}
 
 \section{Comment Compiler et Exécuter}
 
-Vous pouvez compiler et exécuter le projet avec les commandes suivantes :
-
+Pour compiler et lancer le jeu, deux solutions \\
+Utiliser directement les commandes classiques :
 \begin{lstlisting}
 javac -d target/classes src/main/java/*/*.java
 java -cp target/classes app.Gomoku
 \end{lstlisting}
 
-Alternativement, utilisez les scripts fournis :
+Ou tout simplement passer par les scripts fournis :
 
 \begin{itemize}
-    \item \textbf{runGomoku.bat} (Windows)
-    \item \textbf{runGomoku.sh} (Linux/macOS)
-\end{itemize}
+        \item \texttt{runGomoku.bat} pour Windows
+        \item \texttt{runGomoku.sh} pour Linux ou Mac
+    \end{itemize}
 
 Ces scripts compilent automatiquement tous les fichiers sources et lancent le jeu.
+\newpage
 
-\section{Générer la Documentation JavaDoc}
+\section{G\'en\'eration de la Documentation}
 
-Vous pouvez générer une documentation JavaDoc complète avec les scripts suivants :
-
+La JavaDoc peut \^etre g\'en\'er\'ee via :
 \begin{itemize}
-    \item \textbf{generateDocs.bat} (Windows)
-    \item \textbf{generateDocs.sh} (Linux/macOS)
+    \item \texttt{generateDocs.bat} pour Windows
+    \item \texttt{generateDocs.sh} pour Linux ou Mac
 \end{itemize}
+Cela cr\'eera une documentation HTML dans le dossier \texttt{/doc/}
 
 Ces scripts créent une documentation HTML dans le dossier \texttt{/doc/}.
 
 \section{Sauvegardes des Parties}
 
-Les parties sauvegardées se trouvent dans le dossier \texttt{/data/}. Les fichiers portent l'extension \texttt{.dat} et sont générés automatiquement lors de la sauvegarde depuis le jeu.
+Les parties sauvegard\'ees se trouvent dans le dossier \texttt{/data/}, sous forme de fichiers \texttt{.dat}.
 
 \vspace{15mm}
-\section{Structure Visuelle du Projet}
+\section{Organisation Visuelle du Projet}
 
 Voici l'organisation visuelle des dossiers et fichiers du projet :
 
 \begin{lstlisting}[style=tree]
 Gomoku-Game-Projet/
-├── .vscode/                    # Parametres VSCode (optionnel)
 ├── Gomoku/
 │   ├── generateDocs.bat         # Windows : Generer JavaDoc
 │   ├── generateDocs.sh          # Linux/Mac : Generer JavaDoc
 │   ├── runGomoku.bat            # Windows : Compiler et executer Gomoku
 │   ├── runGomoku.sh             # Linux/Mac : Compiler et executer Gomoku
-│   ├── pom.xml                  # Configuration Maven (optionnel)
 │   ├── data/                    # Sauvegardes des parties
 │   │   └── ErkinVsAI.dat
 │   ├── src/
@@ -162,7 +163,9 @@ Gomoku-Game-Projet/
 
 \section{Diagramme UML}
 
-Le diagramme suivant représente uniquement la structure de la logique du jeu, c'est-à-dire les classes du dossier \texttt{model/} ainsi que la classe \texttt{GameEngine} située dans \texttt{app/}.
+
+Un diagramme UML pr\'esente les liens entre les classes principales du projet, notamment celles du \texttt{model/} et la classe \texttt{GameEngine} du dossier \texttt{app/}.
+
 
 \begin{figure}[h!]
     \centering
