@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package model;
 
 import java.io.Serializable;
@@ -11,7 +8,7 @@ import java.util.EnumMap;
  * Represents a single piece on the Gomoku board. Each piece knows its position,
  * color, and its neighbors in 8 directions.
  *
- * Color codes: - 0: White (O) - 1: Black (X)
+ * Color codes:  0 -> White (O) | 1 -> Black (X) 
  *
  * Neighbor links enable directional traversal of the board.
  *
@@ -24,8 +21,7 @@ public class Piece implements Serializable {
     /** Color of the piece which is white(0) or black(1) */
     private final int color; // 0/1 -> white/black
     /**
-     * EnumMap to store neighboring pieces in 8 directions (UP, DOWN, LEFT, RIGHT,
-     * UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT).
+     * EnumMap to store neighboring pieces in 8 directions 
      */
     private EnumMap<Direction, Piece> neighbors;
 
@@ -65,8 +61,17 @@ public class Piece implements Serializable {
      *
      * @param direction the direction of the neighbor
      * @param neighbor the neighboring piece
+     * @throws IllegalArgumentException if direction is null 
+     * @throws IllegalArgumentException if neighbor is null
      */
     public void setNeighbor(Direction direction, Piece neighbor) {
+        if (direction == null) {
+            throw new IllegalArgumentException("Direction cannot be null.");
+        }
+        if (neighbor == null) {
+            throw new IllegalArgumentException("Neighbor cannot be null.");
+            
+        }
         neighbors.put(direction, neighbor);
     }
 
@@ -94,8 +99,13 @@ public class Piece implements Serializable {
      *
      * @param direction the direction to check
      * @return true if a neighbor exists, false otherwise
+     * @throws IllegalArgumentException if direction is null
      */
     public boolean hasNeighbor(Direction direction) {
+        if (direction == null) {
+            throw new IllegalArgumentException("Direction cannot be null.");
+            
+        }
         return neighbors.containsKey(direction);
     }
 
@@ -129,7 +139,12 @@ public class Piece implements Serializable {
     /**
      * Returns a string representation of the piece. "O" for white (0), "X" for
      * black (1).
-     *
+     * 
+     * <p> 
+     * it is mainly used in grid.toString method. 
+     * <b>Note:</b>Just a frienldly reminder to the developers do not add any 
+     * color it will be modified in grid.toString method. 
+     *</p>
      * @return "O" or "X" based on the color
      */
     @Override

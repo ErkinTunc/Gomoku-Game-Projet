@@ -1,17 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package model;
 
 import java.io.Serializable;
 
 /**
- * Abstract base class representing a player in the Gomoku game.
+ * Abstract class representing a player in the Gomoku game.
  * <p>
  * Each player has a name, a color (0 = White, 1 = Black), and a number of
- * pieces they can place on the board. This class defines the common behaviors
- * for all types of players (e.g., human or AI) and must be extended by concrete
+ * pieces they can place on the board. This class  must be extended by concrete
  * subclasses.
  * </p>
  *
@@ -66,14 +62,14 @@ public abstract class Player implements Serializable {
      *
      * @param startNumPieces the number of pieces to assign at the start
      */
-    // Initializes a new game for this player (jeton num=60)
+    // Initializes a new game for this player (ex:jeton num=60)
+    // attribute should be more than 0 if not it will cause problem in other classes
     public void newGame(int startNumPieces) {
         this.pieceNum = startNumPieces;
     }
 
     /**
-     * Plays a piece at the specified location on the grid. Decreases the
-     * player's remaining piece count by 1.
+     * Player plays a piece on the board.
      *
      * @param grid the game grid
      * @param row the row index to place the piece
@@ -86,12 +82,12 @@ public abstract class Player implements Serializable {
         }
         Piece piece = new Piece(this.playerColor, row, col);
         grid.placePiece(piece, row, col);
-        pieceNum--;
+        pieceNum--; // Decreases pieces at hand after player places it
     }
 
     /**
-     * Checks if the player has won the game by placing a piece at the given
-     * location.
+     * Checks if the player wins after they placed their last piece(dev should put its coordinates in attributes).
+     * And Checks it if there is a allignment(of n pieces | n = allignmentNum).
      *
      * @param grid the game grid
      * @param row the row index of the last placed piece
@@ -102,7 +98,7 @@ public abstract class Player implements Serializable {
      */
     public boolean hasWon(Grid grid, int row, int col, int allignmentNum) {
         Piece last = grid.getPiece(row, col);
-        return grid.fivePiecesAlligned(last, allignmentNum);
+        return grid.nPiecesAlligned(last, allignmentNum);
     }
 
     /**
@@ -124,7 +120,7 @@ public abstract class Player implements Serializable {
     }
 
     /**
-     * Gets the color of the player.
+     * Gets the color of the player. it is either 0(white) or 1(black)
      *
      * @return 0 for white, 1 for black
      */
@@ -145,15 +141,19 @@ public abstract class Player implements Serializable {
      * Sets the number of pieces the player has left.
      *
      * @param pieceNum the new number of pieces left
+     * @throws IllegalArgumentException if pieceNum is negative
      */
     public void setPieceNum(int pieceNum) {
+        if (pieceNum < 0) {
+            throw new IllegalArgumentException("Number of pieces cannot be negative.");}
+        
         this.pieceNum = pieceNum;
     }
 
     /**
-     * Returns a string representation of the player. Includes player name,
-     * colour, and number of pieces remaining.
-     *
+     * Returns a string with player info with his name, color  and
+     * how many pieces she/he got left.
+     * 
      * @return a formatted string describing the player
      */
     @Override

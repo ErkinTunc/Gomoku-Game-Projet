@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package save;
 
 import java.io.*;
@@ -14,30 +11,23 @@ import util.ColorInConsole;
  * <p>
  * This class provides static methods to serialize and deserialize game data, 
  * including the grid and players, to and from the file system. 
- * It ensures that saved games are stored within a dedicated {@code /data} directory,
+ * It saves int o "\data" folder or brings saves from there
  * creating it if necessary.
+ * </p>
+ * 
  * <p>
- * Main functionalities:
- * <ul>
- *   <li>Saving the current game state to a {@code .dat} file</li>
- *   <li>Loading a saved game from a {@code .dat} file</li>
- *   <li>Listing available saved games inside the {@code /data} directory</li>
- * </ul>
+ * While I was coding this class, I was inspired by a video on youtube. Which lead me to construct this class in this way.
+ * I will provide the link to the video here:
+ * </p>
+ * @see <a href="https://www.youtube.com/watch?v=xudKOLX_DAk&t=71s">Programming a Java Text Adventure: Saving Games</a>
  * 
  * @author Erkin Tunç Boya
- * @version 1.2
+ * @version 1.3
  * @since 2025-04-26
  */
 public class SaveManager {
 
-    /**
-     * <p>
-     * Private constructor to prevent instantiation of the {@code SaveManager} utility class.
-     * </p>
-     * <p>
-     * This class only contains static methods and should not be instantiated.
-     * </p>
-     */
+    /** Basic constructer */
     public SaveManager() {}
 
     /**
@@ -59,34 +49,51 @@ public class SaveManager {
         }
 
         // Save file inside 'data/' folder
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("data/" + filename))) {
+        try{
+            FileOutputStream fos = new FileOutputStream("data/" + filename);
+            ObjectOutputStream out = new ObjectOutputStream(fos);
+
+            // Serialize the objects
             out.writeObject(grid);
             out.writeObject(player1);
             out.writeObject(player2);
+
+            out.flush(); // write out any buffered bytes
+            out.close();
+
             System.out.println(ColorInConsole.Green + "Game saved successfully." + ColorInConsole.Reset);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(ColorInConsole.Red + "Serialiation Error! Can't save data. \n " 
+                            + e.getClass() + ": " + e.getMessage() + ColorInConsole.Reset);
         }
     }
 
     /**
      * Loads a previously saved game state from the {@code /data} directory.
      * <p>
-     * This method deserializes the grid and players from the specified file.
-     * If an error occurs (file not found, incompatible classes, etc.), it returns {@code null}.
+     * This method deserializes the grid and players from the data folder
      *
      * @param filename the name of the file to load (e.g., "save1.dat")
      * @return an array containing the loaded grid, player1, and player2; or {@code null} if loading fails
      */
     public static Object[] loadGame(String filename) {
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("data/" + filename))) {
+
+        try{
+            FileInputStream fis = new FileInputStream("data/" + filename);  
+            ObjectInputStream in = new ObjectInputStream(fis);
+
+            // Deserialize the objects  
             Grid grid = (Grid) in.readObject();
-            Player player1 = (Player) in.readObject();
+            Player player1 = (Player) in.readObject(); //TODO: if there will be more players it should be modifird |idea : use a for loop for a list of players.
             Player player2 = (Player) in.readObject();
-            System.out.println(ColorInConsole.Green + "Game loaded successfully." + ColorInConsole.Reset);
+
+            System.out.println(ColorInConsole.Green + "\n---- Game loaded ----\n" + ColorInConsole.Reset);
+            
             return new Object[]{grid, player1, player2};
+
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            System.out.println(ColorInConsole.Red + "Serialiation Error! Can't save data. \n " 
+                            + e.getClass() + ": " + e.getMessage() + ColorInConsole.Reset);
             return null;
         }
     }
@@ -97,9 +104,9 @@ public class SaveManager {
      * If no saved games are found, an appropriate message is displayed.
      */
     public static void listSavedGames() {
-        File dir = new File("data");
+        File dir = new File("data"); // Where we strore our data
         if (!dir.exists() || !dir.isDirectory()) {
-            System.out.println(ColorInConsole.Red + "No saved games found. (data folder missing)" + ColorInConsole.Reset);
+            System.out.println(ColorInConsole.Red + "No saved games found. (or data folder missing)" + ColorInConsole.Reset);
             return;
         }
 

@@ -1,15 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package model;
 
 /**
- * Enum representing the 8 possible directions on the board (4 cardinal + 4
- * diagonal). Each direction holds a delta value (dx, dy) to indicate movement
- * in the grid.
+ * Enum representing the 8 possible directions (cardinal and diagonal).
+ * each direction has an "x,y" to indicate which way they are headed.
  *
- * Example: - UP(-1, 0) means moving one row up - DOWN_RIGHT(1, 1) means moving
+ * Example:
+ * UP(-1, 0) means moving one row up, DOWN_RIGHT(1, 1) means moving
  * diagonally down and to the right
  *
  * @author Erkin Tunc Boya
@@ -17,6 +14,9 @@ package model;
  * @since 2025-03-26
  */
 public enum Direction {
+    //TODO: Names could be changed to North, South , East, ... or their short forms like N, S, E, ...
+    // But if we do that, we should also change those attributes in other classes
+
     /** Upward direction (-1 row, 0 column). */
     UP(-1, 0),
 
@@ -41,21 +41,21 @@ public enum Direction {
     /** Down-right diagonal (+1 row, +1 column). */
     DOWN_RIGHT(1, 1);
 
-    /** Row delta for the direction. */
-    public final int dx;
+    /** Row for the direction. */
+    private final int x;
 
-    /** Column delta for the direction. */
-    public final int dy;
+    /** Column for the direction. */
+    private final int y;
 
     /**
-     * Constructs a direction with the specified row and column deltas.
+     * Creates a  new Direction for chosen way with x and y.
      *
-     * @param dx change in row
-     * @param dy change in column
+     * @param x change in row
+     * @param y change in column
      */
-    Direction(int dx, int dy) {
-        this.dx = dx;
-        this.dy = dy;
+    Direction(int x, int y) {
+        this.x = x; 
+        this.y = y;
     }
 
 
@@ -87,5 +87,21 @@ public enum Direction {
         }
         throw new IllegalStateException("No opposite defined for direction: " + this);
     }
+
+    /** Gets the X of the direction 
+     * @return x
+    */
+    public int getX() {
+        return x;
+    }
+
+    /** Gets the Y of the direction 
+     * @return y
+    */
+    public int getY() {
+        return y;
+    }
+
+    
 
 }

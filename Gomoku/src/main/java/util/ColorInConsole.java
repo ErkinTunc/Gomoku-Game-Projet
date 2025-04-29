@@ -1,18 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package util;
 
 /**
  * Utility class that provides ANSI escape codes to print colored text and
- * backgrounds in the console. Useful for adding visual emphasis or styling
- * console outputs.
- * <p>
- * Note: These escape codes work in terminals that support ANSI colors (e.g.,
- * most Unix terminals). They may not work in the standard Windows Command
- * Prompt without additional configuration.
- * </p>
+ * backgrounds in the console. Useful for coloring the terminal
  *
  * Example usage:
  * <pre>{@code
@@ -108,9 +99,6 @@ public class ColorInConsole {
      *
      * This sends a couple of special ANSI codes to the terminal:
      * one to clear the screen, and one to move the cursor back to the beginning.
-     *
-     * Works great in most modern terminals. Might not work perfectly
-     * in very old Windows consoles.
      */
     public static void clearScreen() {
         System.out.print("\033[H\033[2J");

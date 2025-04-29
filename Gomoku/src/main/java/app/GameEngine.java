@@ -1,6 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
+
 package app;
 
 import java.util.Scanner;
@@ -116,10 +114,7 @@ public class GameEngine {
      *   <li>Switches the turn to Player 2 after the first move</li>
      * </ul>
      * <p>
-     * This ensures that Player 1 always starts in the center of the board,
-     * providing a balanced start to the game.
-     *
-     * @see model.Grid#placeTheFirstPiece(int, int, model.Piece)
+     * This ensures that Player 1 always starts in the center of the board.
      */
     public void playFirstRound() { // Always player1 starts first
 
@@ -154,14 +149,9 @@ public class GameEngine {
      *   <li>Validating the move and checking for win conditions or a draw</li>
      *   <li>Switching turns between players if the game continues</li>
      * </ul>
-     * <p>
-     * The game state (`gameOver`) is updated if a player wins, if the board becomes full,
-     * or if the player chooses to exit to the main menu.
+     * 
      *
      * @see save.SaveManager#saveGame(String, model.Grid, model.Player, model.Player)
-     * @see model.Player#choosePieceLocation(model.Grid)
-     * @see model.Player#play(model.Grid, int, int)
-     * @see model.Player#hasWon(model.Grid, int, int, int)
      */
     public void playRound() {
 
@@ -202,18 +192,16 @@ public class GameEngine {
                 if (currentPlayer.hasWon(grid, row, col, winLength)) {
                     System.out.println(currentPlayer.getName() + " wins!");
                     gameOver = true;
-                    System.out.println("\n\tPress anything to continue...");
-                    scanner.nextLine();
+                    Gomoku.pressToContinue(scanner);
                     return;
                 }
     
                 // Check for draw
                 if (grid.isGridFull()) {
                     if (!expendibleGrid) {
-                        System.out.println("Draw! The board is full.");
+                        System.out.println(ColorInConsole.Yellow + "Draw! The board is full." + ColorInConsole.Reset);
                         gameOver = true;
-                        System.out.println("\n\tPress anything to continue...");
-                        scanner.nextLine();
+                        Gomoku.pressToContinue(scanner);
                         return;
                     } else {
                         System.out.println("Grid is full, will be expanded soon.");
@@ -250,18 +238,12 @@ public class GameEngine {
      * <p>
      * This method manages the overall flow of the game:
      * <ul>
-     *   <li>Clears the screen and displays the current state of the grid each round</li>
      *   <li>Handles player turns and checks if a player has run out of pieces</li>
      *   <li>Detects when the grid is full and dynamically expands it if expandable mode is enabled</li>
-     *   <li>Distributes additional pieces to players when the grid expands</li>
      *   <li>Ends the game when a player wins or when both players have no pieces left (draw)</li>
      * </ul>
      * <p>
      * The game continues in a loop until a win condition or draw is detected.
-     *
-     * @see #playFirstRound()
-     * @see #playRound()
-     * @see model.Grid#expandGrid(int)
      */
     public void playGame() {
         playFirstRound();
@@ -290,18 +272,7 @@ public class GameEngine {
             // Play normal round
             playRound();
 
-            // Check if we need to expand the grid
-            if (expendibleGrid && grid.isGridFull()) {
-                int newSize = grid.getSize() * 2 - 1; // Make sure it stays odd
-                grid = grid.expandGrid(newSize);
-                System.out.println(ColorInConsole.Green +"Grid has been expanded to " + newSize + "x" + newSize + ColorInConsole.Reset);
-                
-                // Give players more pieces when the grid expands
-                int additionalPieces = playerPiece;//startingPieces / 2;
-                player1.setPieceNum( player1.getPieceNum() + additionalPieces);
-                player2.setPieceNum( player2.getPieceNum() + additionalPieces);
-                System.out.println(ColorInConsole.Green + "Each player received " + additionalPieces + " additional pieces." + ColorInConsole.Reset);
-            }
+            expandGridIfNeeded(); // Check if we need to expand the grid
         }
     }
 
@@ -313,7 +284,6 @@ public class GameEngine {
      *   <li>Player turns (Human vs Human or Human vs AI)</li>
      *   <li>Piece exhaustion: skips players who have no remaining pieces</li>
      *   <li>Victory conditions and grid expansion if enabled</li>
-     *   <li>Redrawing the grid after each move</li>
      * </ul>
      *
      * <p>If the grid becomes full and expandable mode is active, the grid is expanded dynamically
@@ -322,8 +292,6 @@ public class GameEngine {
      * <p>The game continues until a player wins, the grid is completely filled without expansion, 
      * or both players run out of pieces (draw).
      *
-     * @see app.GameEngine#playRound()
-     * @see model.Grid#expandGrid(int)
      */
     public void resumeGame() {
         this.gameOver = false;
@@ -349,16 +317,7 @@ public class GameEngine {
     
             playRound();
     
-            if (expendibleGrid && grid.isGridFull()) {
-                int newSize = grid.getSize() * 2 - 1;
-                grid = grid.expandGrid(newSize);
-                System.out.println(ColorInConsole.Green +"Grid has been expanded to " + newSize + "x" + newSize + ColorInConsole.Reset);
-    
-                int additionalPieces = playerPiece;
-                player1.setPieceNum(player1.getPieceNum() + additionalPieces);
-                player2.setPieceNum(player2.getPieceNum() + additionalPieces);
-                System.out.println(ColorInConsole.Green + "Each player received " + additionalPieces + " additional pieces." + ColorInConsole.Reset);
-            }
+            expandGridIfNeeded(); // Check if we need to expand the grid
         }
     }
 
@@ -381,14 +340,54 @@ public class GameEngine {
     }
 
 
-    // ========= SETTERS ===========
+    /**
+     * Expands the grid size dynamically if expansion is enabled and the current grid is full.
+     * 
+     * <p>
+     * This method checks if the grid is full and whether expandable mode is active.
+     * If both conditions are satisfied:
+     * </p>
+     * 
+     *  <ul>
+     *   <li>The grid size is doubled (following the formula 2n-1 to keep it odd).</li>
+     *   <li>The existing grid data is transferred into a new, larger grid.</li>
+     *   <li>Both players are granted additional pieces based on the starting piece count.</li>
+     *   <li>A success message is displayed to indicate the grid expansion and new pieces awarded.</li>
+     *  </ul>
+     * 
+     * <p>
+     * If the grid is not full or expandable mode is disabled, this method does nothing.
+     * </p>
+     * 
+     * @see model.Grid#expandGrid(int)
+     */
+    private void expandGridIfNeeded(){
+        if (expendibleGrid && grid.isGridFull()) {
+            int newSize = grid.getSize() * 2 - 1; // Make sure it stays odd
+            grid = grid.expandGrid(newSize);
+            System.out.println(ColorInConsole.Green +"Grid has been expanded to " + newSize + "x" + newSize + ColorInConsole.Reset);
+            
+            // Give players more pieces when the grid expands
+            int additionalPieces = playerPiece;//startingPieces / 2;
+            player1.setPieceNum( player1.getPieceNum() + additionalPieces);
+            player2.setPieceNum( player2.getPieceNum() + additionalPieces);
+            System.out.println(ColorInConsole.Green + "Each player received " + additionalPieces + " additional pieces." + ColorInConsole.Reset);
+        }
+    }
+
+
+    // ============== SETTERS ===============
 
     /**
      * Sets the grid for the game.
      *
      * @param grid the grid to set
+     * @throws IllegalArgumentException if the grid is null
      */
     public void setGrid(Grid grid) {
+        if (grid == null) {
+            throw new IllegalArgumentException("Grid cannot be null.");
+        }
         this.grid = grid;
     }
 
@@ -396,8 +395,12 @@ public class GameEngine {
      * Sets the first player for the game.
      *
      * @param player1 the first player to set
+     * @throws IllegalArgumentException if the player is null
      */
     public void setPlayer1(Player player1) {
+        if (player1 == null) {
+            throw new IllegalArgumentException("Player1 cannot be null.");
+        }
         this.player1 = player1;
     }
 
@@ -405,8 +408,12 @@ public class GameEngine {
      * Sets the second player for the game.
      *
      * @param player2 the second player to set
+     * @throws IllegalArgumentException if the player is null
      */
     public void setPlayer2(Player player2) {
+        if (player2 == null) {
+            throw new IllegalArgumentException("Player2 cannot be null.");
+        }
         this.player2 = player2;
     }
 
@@ -414,8 +421,12 @@ public class GameEngine {
      * Sets the number of pieces each player starts with.
      *
      * @param playerPiece the number of pieces to set
+     * @throws IllegalArgumentException if the number of pieces is less than 0
      */
     public void setPlayerPiece(int playerPiece) {
+        if (playerPiece < 0) {
+            throw new IllegalArgumentException("Player pieces must be more than 0.");
+        }
         this.playerPiece = playerPiece;
     }
 
@@ -423,8 +434,12 @@ public class GameEngine {
      * Sets the length of the winning condition.
      *
      * @param winLength the length to set
+     * @throws IllegalArgumentException if the win length is not more than 2
      */
     public void setWinLength(int winLength) {
+        if (winLength <= 2) {
+            throw new IllegalArgumentException("Win length must be more than 2.");
+        }
         this.winLength = winLength;
     }
 
@@ -432,8 +447,12 @@ public class GameEngine {
      * Sets the size of the grid.
      *
      * @param gridSize the size to set
+     * @throws IllegalArgumentException if the grid size is not odd
      */
     public void setGridSize(int gridSize) {
+        if (gridSize % 2 != 1) {
+            throw new IllegalArgumentException("Grid size should be odd.");
+        }
         this.gridSize = gridSize;
     }
 
@@ -441,8 +460,12 @@ public class GameEngine {
      * Sets the current player.
      *
      * @param currentPlayer the current player to set
+     * @throws IllegalArgumentException if the current player is null
      */
     public void setCurrentPlayer(Player currentPlayer) {
+        if (currentPlayer == null) {
+            throw new IllegalArgumentException("Current player cannot be null.");
+        }
         this.currentPlayer = currentPlayer;
     }
 
@@ -463,7 +486,7 @@ public class GameEngine {
         this.expendibleGrid = expandable;
     }
 
-    // ======== GETTERS ===========
+    // ============= GETTERS ==================
 
     /**
      * Gets the grid of the game.

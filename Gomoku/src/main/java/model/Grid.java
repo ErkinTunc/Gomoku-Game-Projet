@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package model;
 
 import java.io.Serializable;
@@ -15,6 +12,35 @@ import util.ColorInConsole;
  * the grid updates directional neighbor links between pieces.
  *
  * Provides alignment-checking logic for win conditions.
+ * 
+ * <p>
+ * ToString method is the key method for showing all the grid on the console.
+ * </p>
+ * 
+ * <h2>Design Choices:</h2>
+ * 
+ * <h3>Why 2D Array?</h3>
+ * <p>
+ * Chosed 2D array to represent grid, because it was much easier to use insteaad of ADTs. 
+ * And as developer I told to myself "I should admire simplicity not complexity".
+ * In further developments ı just thought it would be much more harder to apply OOP principles, 
+ * if I do not comprehend how it works 100%.
+ * </p>
+ * <p>
+ * If ıt needs to be changed in the future, A linked double linked list might 
+ * be used but the developer should also think how to show 8-directional neighbors.
+ * </p>
+ * 
+ * <h3>Expendible Grid</h3>
+ * <p>
+ * As expected thr grid grows but it uses a simple algorithm to grow the grid. As ı saw the method 
+ * in my Algorithm class many times I choose to go with it.
+ * </p>
+ * <p>
+ * This is how it works :
+ * when it is full , it will create a new 2D array and copy the pieces to the new one.
+ * <b>Note:</b> The grid is not expandable in the middle of the game. It can only be expanded when it is full.
+ * </p> 
  *
  * @author Erkin Tunc Boya
  * @version 1.2
@@ -64,15 +90,17 @@ public class Grid implements Serializable{
     }
 
     /**
-     * Places the first piece on the board. Should be placed at the center of
-     * the grid.
+     * Places the first peace at the center of the grid but developer should tell 
+     * the centers location explicitly.
      *
-     * @param i the row index (should be the center row)
-     * @param j the column index (should be the center column)
-     * @param piece the piece to place
+     * @param piece The piece to place.
+     * @param i Row index.
+     * @param j Column index.
+     * @throws IllegalArgumentException if the position is invalid.
      */
     public void placeTheFirstPiece(int i, int j, Piece piece) {
         // First piece should be place in the center
+        // TODO: automaticcly place the first piece at the cdenter without parameters (maybe you can use Grid size as parameter)
         this.grid[i][j] = piece;
         modifyNeighbours(piece);
     }
@@ -90,7 +118,7 @@ public class Grid implements Serializable{
         if (grid[row][col] != null) {
             throw new IllegalArgumentException("Cell already occupied.");
         }
-        if (!isAdjacentToAnotherPiece(row, col)) {
+        if (!hasNeighbor(row, col)) {
             throw new IllegalArgumentException("You must place your piece adjacent to an existing one.");
         }
 
@@ -101,16 +129,16 @@ public class Grid implements Serializable{
     }
 
     /**
-     * Checks whether the given cell has any adjacent non-null neighbors.
+     * Checks if chosen cell(piece) has any neighbors in any direction.
      *
      * @param row the row index to check
      * @param col the column index to check
      * @return true if at least one neighbor is occupied; false otherwise
      */
-    public boolean isAdjacentToAnotherPiece(int row, int col) {
+    public boolean hasNeighbor(int row, int col) {
         for (Direction dir : Direction.values()) {
-            int newRow = row + dir.dx;
-            int newCol = col + dir.dy;
+            int newRow = row + dir.getX();
+            int newCol = col + dir.getY();
 
             if (newRow >= 0 && newRow < size && newCol >= 0 && newCol < size) {
                 if (grid[newRow][newCol] != null) {
@@ -122,13 +150,11 @@ public class Grid implements Serializable{
     }
 
     /**
-     * Checks whether the specified piece completes a winning alignment.
+     * This methos checks if piece is aligned with n(alligningNum) pieces in every direction.
      * <p>
      * It verifies if the piece is part of a straight line (horizontal,
      * vertical, or diagonal) containing at least {@code alligningNum}
-     * consecutive pieces of the same color. The method searches in 4 direction
-     * pairs (LEFT+RIGHT, UP+DOWN, and both diagonals), counting how many pieces
-     * are connected in both directions starting from the given piece.
+     * consecutive pieces of the same color. 
      * </p>
      *
      * @param piece the newly placed piece to check alignment from
@@ -136,7 +162,7 @@ public class Grid implements Serializable{
      * @return {@code true} if the alignment condition is met, {@code false}
      * otherwise
      */
-    public boolean fivePiecesAlligned(Piece piece, int alligningNum) {
+    public boolean nPiecesAlligned(Piece piece, int alligningNum) {
         // Define 4 direction pairs to cover horizontal, vertical, and both diagonals
         Direction[][] directionPairs = {
             {Direction.LEFT, Direction.RIGHT},
@@ -164,11 +190,7 @@ public class Grid implements Serializable{
     /**
      * Counts how many consecutive pieces of the same color are connected from
      * the given piece in the specified direction.
-     * <p>
-     * Traverses the chain of neighbors in that direction using
-     * {@link Piece#getNeighbor(Direction)} until it reaches a piece of a
-     * different color or a null neighbor.
-     * </p>
+     *
      *
      * @param piece the starting piece
      * @param dir the direction to count toward
@@ -209,15 +231,15 @@ public class Grid implements Serializable{
      */
     public static int countSameColorInDirection(Grid grid, int row, int col, int color, Direction dir) {
         int count = 0;
-        int r = row + dir.dx;
-        int c = col + dir.dy;
+        int newRow = row + dir.getX();
+        int newCol = col + dir.getY();
 
-        while (r >= 0 && r < grid.getSize() && c >= 0 && c < grid.getSize()) {
-            Piece piece = grid.getPiece(r, c);
+        while (newRow >= 0 && newRow < grid.getSize() && newCol >= 0 && newCol < grid.getSize()) {
+            Piece piece = grid.getPiece(newRow, newCol);
             if (piece != null && piece.getColor() == color) {
                 count++;
-                r += dir.dx;
-                c += dir.dy;
+                newRow += dir.getX();
+                newCol += dir.getY();
             } else {
                 break;
             }
@@ -282,11 +304,11 @@ public class Grid implements Serializable{
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (grid[i][j] == null) {
-                    return false; // Boş bir hücre varsa grid dolu değil
+                    return false; // when there is a empty cell in the grid
                 }
             }
         }
-        return true; // If there are no empty cells, the grid is completely full
+        return true; // when there is no empty cell
     }
 
     /**
@@ -299,8 +321,7 @@ public class Grid implements Serializable{
     }
 
     /**
-     * Checks whether the specified row and column coordinates are within the
-     * boundaries of the game grid.
+     * Checks if the chosen location is in the grid bounds.
      *
      * @param r the row index to check
      * @param c the column index to check
@@ -312,8 +333,9 @@ public class Grid implements Serializable{
     }
 
     /**
-     * Creates a new grid of a larger size, copying the existing pieces to the
-     * new grid while maintaining their relative positions.
+     * This function creates a bigger grid which is almost 2 times bigger ("2 times - 1" becuse it should be odd).
+     * After that it will copy the pieces from the old grid and place them in the new grid bur it's referance point is the center.
+     * Soo it isnot a nromal array copy, because placements are different.
      *
      * @param newSize the new size for the grid (must be greater than current size)
      * @return a new Grid object with the specified size and copied pieces
@@ -331,18 +353,18 @@ public class Grid implements Serializable{
         Grid newGrid = new Grid(newSize);
         
         // Calculate the offset to center the old grid in the new grid
-        int offset = (newSize - size) / 2;
+        int extraPos = (newSize - size) / 2; // extraPos is the the the differnce between old one divided by 2 because we think like it will be centered.
         
-        // Copy pieces from old grid to new grid with offset
+        // Copy pieces
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (this.grid[i][j] != null) {
                     // Create a new piece at the offset position
                     Piece oldPiece = this.grid[i][j];
-                    Piece newPiece = new Piece(oldPiece.getColor(), i + offset, j + offset);
+                    Piece newPiece = new Piece(oldPiece.getColor(), i + extraPos, j + extraPos);
                     
-                    // Place the piece directly in the grid array
-                    newGrid.grid[i + offset][j + offset] = newPiece;
+                    // Place the piece 
+                    newGrid.grid[i + extraPos][j + extraPos] = newPiece;
                 }
             }
         }
@@ -361,7 +383,7 @@ public class Grid implements Serializable{
 
 
     /**
-     * Returns a colored, well-formatted, and coordinate-labeled string
+     * Returns a colored, well-formatted, string
      * representation of the game grid.
      * <p>
      * This method visually renders the entire board using ANSI-colored ASCII
@@ -370,77 +392,76 @@ public class Grid implements Serializable{
      * <li><b>X</b>: Black stone (Player 1)</li>
      * <li><b>O</b>: White stone (Player 2)</li>
      * </ul>
-     * <p>
-     * The grid is surrounded by row and column numbers on all sides for player
-     * orientation. ANSI escape codes are used to color:
-     * <ul>
-     * <li>Row and column numbers: {@code Red} for columns, {@code Blue} for
-     * rows</li>
-     * <li>Player pieces: {@code BrightBlack} for Player 1, {@code BrightWhite}
-     * for Player 2</li>
-     * </ul>
-     * <p>
-     * Alignment is dynamically maintained for single- and double-digit
-     * coordinates. Works best in terminals that support ANSI escape sequences.
      *
      * @return a string representing the current grid state with borders,
      * coordinates, and colored pieces
      */
     @Override
     public String toString() {
-        System.out.println("");
         StringBuilder sb = new StringBuilder();
-        final int cellWidth = 3; // Width per cell (symbol + space)
+        final int cellWidth = 4;
 
-        // ==== Print top column numbers ====
-        sb.append("\t   ");
-        for (int j = 0; j < size; j++) {
+        // Top column enumareter (red)
+        sb.append("   "); // padding fdor red collumn ligne
+        for (int col = 0; col < size; col++) {
             sb.append(ColorInConsole.Red);
-            sb.append(String.format("%" + cellWidth + "d", j));
+            sb.append(String.format("%" + cellWidth + "d", col));
             sb.append(ColorInConsole.Reset);
         }
         sb.append("\n");
 
-        // ==== Build row separator ====
-        String rowSeparator = "\t   " + "-".repeat(cellWidth * size) + "\n";
+        for (int row = 0; row < size; row++) { // Lignes
 
-        for (int i = 0; i < size; i++) {
-            sb.append(rowSeparator);
-
-            // ==== Left row number ====
+            // Left row number
             sb.append(ColorInConsole.Blue);
-            sb.append(String.format("\t%2d ", i));
+            sb.append(String.format("%" + cellWidth + "d", row));
             sb.append(ColorInConsole.Reset);
+            sb.append("  "); // padding for left border
 
-            // ==== Grid content ====
-            for (int j = 0; j < size; j++) {
-                Piece piece = grid[i][j];
-                sb.append("|");
-                if (piece == null) {
-                    sb.append("  ");
-                } else if (piece.getColor() == 0) {
-                    sb.append(ColorInConsole.BrightWhite + piece.toString() + ColorInConsole.Reset + " ");
+            // Pieces and null places(no pieces)
+            for (int col = 0; col < size; col++) {
+                Piece piece = grid[row][col];
+                String rawSymbol = ".";
+
+                if (piece != null) {
+                    rawSymbol = piece.toString(); // typically "X" or "O"
+                }
+
+                String paddedSymbol = String.format("%-" + cellWidth + "s", rawSymbol); // "%" -> Starts the format specifier. | "-" -> Left-align the content. | "4" -> cellWitdh total width of printed string | s -> represents a string  |
+                //         |-->used for seeing "dot + 3 spaces"
+
+                if (piece != null) {
+                    if (piece.getColor() == 0) {
+                        sb.append(ColorInConsole.BrightWhite).append(paddedSymbol).append(ColorInConsole.Reset);
+                    } else {
+                        sb.append(ColorInConsole.BrightBlack).append(paddedSymbol).append(ColorInConsole.Reset);
+                    }
                 } else {
-                    sb.append(ColorInConsole.BrightBlack + piece.toString() + ColorInConsole.Reset + " ");
+                    if (col == size - 1) { // for the last column before blue column(1...n)
+                        paddedSymbol = String.format("%-" + 2 + "s", rawSymbol); 
+                        sb.append(paddedSymbol);
+                    } else {
+                       sb.append(paddedSymbol);  
+                    }
+                    
                 }
             }
 
-            // ==== Right row number ====
-            sb.append("| ");
+            // Right row number
             sb.append(ColorInConsole.Blue);
-            sb.append(String.format("%2d", i));
+            sb.append(String.format("%" + 3 + "d", row));
             sb.append(ColorInConsole.Reset);
             sb.append("\n");
+
+            
         }
 
-        // ==== Final bottom border ====
-        sb.append(rowSeparator);
-
-        // ==== Print bottom column numbers ====
-        sb.append("\t   ");
-        for (int j = 0; j < size; j++) {
+        // Bottom column enumerater (red)
+        sb.append("\n");
+        sb.append("   "); // padding for red collumn ligne
+        for (int col = 0; col < size; col++) {
             sb.append(ColorInConsole.Red);
-            sb.append(String.format("%" + cellWidth + "d", j));
+            sb.append(String.format("%" + cellWidth + "d", col));
             sb.append(ColorInConsole.Reset);
         }
         sb.append("\n");
@@ -448,13 +469,32 @@ public class Grid implements Serializable{
         return sb.toString();
     }
 
+
+    /**
+     * A function which gives number of digits in an integer
+     *
+     * @param num the number which will be cheked
+     * @return the grid array
+     * @throws IllegalArgumentException if the number is negative
+     */
+    private int numberOfDigits(int num){ // ex: 1234 -> 4  | 199 -> 3 | 10 -> 2
+        if (num<0) {
+            throw new IllegalArgumentException("Number should be positive.");
+            
+        }
+        if (num == 0) {
+            return 0;
+        }
+        int digits = 1;
+        while (num > 0) {
+            num /= 10;
+            digits++;
+        }
+        return digits;
+    }
+
     /**
      * Updates the neighbor references of the given piece in all 8 directions.
-     * <p>
-     * For each direction, if there is an adjacent piece on the board, this
-     * method links the given piece to it using {@code setNeighbor}, and vice
-     * versa. It ensures bidirectional connectivity between adjacent pieces.
-     * </p>
      *
      * @param piece the piece whose neighbors are to be updated
      */
@@ -467,8 +507,8 @@ public class Grid implements Serializable{
 
         // we go to every neighbor
         for (Direction dir : Direction.values()) {
-            int newRow = row + dir.dx;
-            int newCol = col + dir.dy;
+            int newRow = row + dir.getX();
+            int newCol = col + dir.getY();
 
             // checks if our new location is in the grid
             if (newRow >= 0 && newRow < size && newCol >= 0 && newCol < size) {

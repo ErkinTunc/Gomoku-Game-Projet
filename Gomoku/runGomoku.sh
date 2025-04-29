@@ -19,6 +19,6 @@ echo
 echo "Running Gomoku..."
 echo
 
-java -cp target/classes app.Gomoku
+java -cp target/classes main.java.app.Gomoku
 
 read -p "Press enter to exit..."

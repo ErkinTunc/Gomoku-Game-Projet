@@ -1,26 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package util;
 
 /**
  * Utility class for formatting and converting ASCII art or multi-line strings
  * into Java-compatible source code string declarations.
+ * 
  * <p>
- * This class is particularly useful when embedding large ASCII logos or
- * formatted text blocks directly into Java source files, such as terminal UIs
- * or debug output.
+ * Mainly used for make it easier to show ASCII art in the console.
+ * Which is not used every part of the project, but it is used in the main menu.
  * </p>
- *
- * <h2>Features:</h2>
- * <ul>
- * <li>Converts ASCII art into valid multi-line Java String declarations</li>
- * <li>Adds indentation (tabs) to every line of a given multi-line string</li>
- * <li>Escapes special characters (e.g., backslashes) for Java syntax
- * compatibility</li>
- * </ul>
- *
  * 
  * @author Erkin Tunc Boya
  * @version 1.3

@@ -1,16 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package model;
 
 import java.util.Scanner;
 
+import util.ColorInConsole;
+
 /**
  * Represents a human player in the Gomoku game.
- * <p>
- * A human player chooses their moves via terminal input.
- * </p>
+ * A human player chooses their moves with a scanner input.
  *
  * @author Erkin Tunc Boya
  * @version 1.2
@@ -25,9 +22,8 @@ public class Human extends Player {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Constructs a human player with a given name and color. Assigns 60 pieces
-     * by default.
-     *
+     * Creates a Human Player with a name and color (his pieces are given by default)
+     * 
      * @param name the player's name
      * @param playerColor 0 for white, 1 for black
      */
@@ -69,7 +65,7 @@ public class Human extends Player {
                 System.out.print("Enter column number (0-" + (size - 1) + "): ");
                 col = Integer.parseInt(scanner.nextLine());
 
-                // Dinamik grid sınırı kontrolü
+                // Dynamique Grill Controle
                 if (row < 0 || row >= size || col < 0 || col >= size) {
                     System.out.println("Invalid position. Please enter values between 0 and " + (size - 1) + ".");
                     continue;
@@ -78,11 +74,13 @@ public class Human extends Player {
                 break;
 
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter valid numbers.");
+                System.out.println(ColorInConsole.Red + "Invalid input. Please enter valid numbers." + ColorInConsole.Reset);
             }
         }
 
-        return new int[]{row, col};
+        int[] chosenLocation = {row, col};
+
+        return chosenLocation;
     }
 
 
@@ -90,8 +88,8 @@ public class Human extends Player {
      * Resets the scanner for the human player.
      * <p>
      * This method reinitializes the scanner to ensure proper input handling
-     * after loading a saved game, preventing potential resource leaks or
-     * stale input references.
+     * after loading a saved game, preventing load problems while save loading the game.
+     * </p>
      */
     public void resetScanner() {
         scanner = new Scanner(System.in); // Reset the scanner to avoid resource leak

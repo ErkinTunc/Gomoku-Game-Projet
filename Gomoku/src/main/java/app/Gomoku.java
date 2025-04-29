@@ -1,8 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 
 package app;
 import java.util.Scanner;
@@ -39,7 +34,7 @@ java -cp target/classes app.Gomoku
  * </p>
  * This class is responsible for:
  * <ul>
- *   <li>Displaying the ASCII art logo and colorful main menu</li>
+ *   <li>Displaying the ASCII art logo and main menu</li>
  *   <li>Handling user choices to start a new game, load a game, access settings, or exit</li>
  *   <li>Managing game settings through a dedicated settings menu</li>
  *   <li>Initializing a {@link app.GameEngine} instance to control gameplay</li>
@@ -91,28 +86,6 @@ public class Gomoku {
      * <p>
      * Displays the main menu and handles the user's navigation through the game options.
      * </p>
-     * The available options include:
-     * <ul>
-     *   <li>Starting a new game between two human players</li>
-     *   <li>Starting a game against the AI</li>
-     *   <li>Loading a previously saved game</li>
-     *   <li>Opening the settings menu to adjust game parameters</li>
-     *   <li>Exiting the game</li>
-     * </ul>
-     * 
-     * <p>
-     * This method initializes a new {@link app.GameEngine} instance and manages the 
-     * appropriate setup (such as player creation and grid initialization) based on user choices.
-     * The menu is displayed inside a loop, allowing the user to return to the menu after completing
-     * an action unless the program is exited.
-     * </p>
-     *
-     * @see app.GameEngine#newGame()
-     * @see app.GameEngine#playGame()
-     * @see app.GameEngine#resumeGame()
-     * @see app.Gomoku#settingsMenu(GameEngine)
-     * @see save.SaveManager#listSavedGames()
-     * @see save.SaveManager#loadGame(String)
      */
     public void showMainMenu() {
 
@@ -140,115 +113,149 @@ public class Gomoku {
             System.out.println(asciiArtLogo);
             System.out.print(mainMenu);
 
-            int choice = scannerMain.nextInt();
-            scannerMain.nextLine(); // consume newline
+            int choice = safeNextInt(scannerMain); // use safeNextInt to read the integer safely
 
             System.out.println("");
 
             switch (choice) {
-                case 1:
-                    game.newGame(); // multiplayer
-
-                    ColorInConsole.clearScreen(); // Clear the console
-
-                    System.out.println("Player 1 starts with black and plays the first move.");
-
-                    // Get players names
-                    System.out.print("Name Of Player1 : ");
-                    String name1 = scannerMain.nextLine();
-
-                    System.out.print("Name Of Player2 : ");
-                    String name2 = scannerMain.nextLine();
-
-                    // Create Players
-                    game.setPlayer1(new Human(name1, 1, game.getPlayerPiece())); // 1 = Black
-                    game.setPlayer2(new Human(name2, 0, game.getPlayerPiece())); // 0 = White
-
-                    game.setCurrentPlayer(game.getPlayer1());
-
-                    ColorInConsole.clearScreen(); // Clear the console
-
-                    // Play the game
-                    game.playGame();
+                case 1: 
+                    startTwoPlayerGame(scannerMain, game); // multiplayer
                     break;
                 case 2:
-                    game.newGame(); // vs AI
-
-                    ColorInConsole.clearScreen(); // Clear the console
-
-                    // Get players names
-                    System.out.print("Name Of Player1 : ");
-                    String userName = scannerMain.nextLine();
-
-                    // Create Players 
-                    game.setPlayer1(new Human(userName, 1, game.getPlayerPiece())); // 1 = Black
-                    game.setPlayer2(new AIPlayer("AI-Sam", 0, game.getWinLength(), game.getPlayerPiece())); // 0 = White
-
-                    game.setCurrentPlayer(game.getPlayer1());
-
-                    game.playGame();
+                    startAIGame(scannerMain, game); // vs AI
                     break;
                 case 3:
-                    ColorInConsole.clearScreen(); // Clear the console
-
-                    // Load Game
-                    SaveManager.listSavedGames();
-
-                    System.out.print("Enter the filename to load (example: save.dat)\nOr press <q> to return to main menu: ");
-                    String filename = scannerMain.nextLine().trim();
-
-                    if (filename.equalsIgnoreCase("q")) {
-                        System.out.println("Returning to main menu...");
-                        break;
-                    }
-                    
-                    Object[] loadedData = SaveManager.loadGame(filename);
-
-
-                    if (loadedData != null) {
-                        game.setGrid((Grid) loadedData[0]);
-                        game.setPlayer1((Player) loadedData[1]);
-                        game.setPlayer2((Player) loadedData[2]);
-                        game.setCurrentPlayer(game.getPlayer1());
-
-                        // If player1 is a Human, reinitialize its Scanner
-                        if (game.getPlayer1() instanceof Human) {
-                            ((Human) game.getPlayer1()).resetScanner();
-                        }
-
-                        // If player2 is a Human, reinitialize its Scanner
-                        if (game.getPlayer2() instanceof Human) {
-                            ((Human) game.getPlayer2()).resetScanner();
-                        }
-
-                        // Display loaded game attributes
-                        System.out.println("Grid Size: " + game.getGridSize());
-                        System.out.println("Win Length: " + game.getWinLength());
-                        System.out.println("Player 1: " + game.getPlayer1().getName());
-                        System.out.println("Player 2: " + game.getPlayer2().getName());
-
-                        game.resumeGame(); // Resume the game
-                    } else {
-                        System.out.println(ColorInConsole.Red + "Failed to load the game." + ColorInConsole.Reset);
-                        pressToContinue(scannerMain);// press anything to continue
-                    }
+                    loadSavedGame(scannerMain, game); // load game
                     break;
                 case 4:
-                    ColorInConsole.clearScreen(); // Clear the console
                     settingsMenu(game);
                     break;
                 case 5:
-                    ColorInConsole.clearScreen(); // Clear the console
-                    System.out.println(asciiArtLogo);
-                    System.out.println(ColorInConsole.Yellow + "Thanks for playing!" + ColorInConsole.Reset);
-                    System.out.println(ColorInConsole.Yellow + "Exiting the game..." + ColorInConsole.Reset);
-                    scannerMain.close(); // Close the scanner
+                    System.out.println(ColorInConsole.BrightBlack + "Exiting the game..." + ColorInConsole.Reset);
                     System.exit(0); // Exit the program
                     break;
                 default:
                     System.out.println(ColorInConsole.Red + "Invalid option. Try again." + ColorInConsole.Reset);
                     pressToContinue(scannerMain);// press anything to continue
             }
+        }
+    }
+
+    /**
+     * Starts a new two-player game session between two human players.
+     * <p>
+     * This method initializes a new game, prompts the users to enter their names,
+     * creates two {@link Human} player instances with the provided names,
+     * sets Player 1 as the starting player, clears the console screen, and
+     * begins gameplay.
+     * </p>
+     *
+     * @param scannerMain is a scanner 
+     * @param game the {@link GameEngine} instance .
+     */
+    private void startTwoPlayerGame(Scanner scannerMain,GameEngine game){
+        game.newGame(); // multiplayer
+
+        ColorInConsole.clearScreen(); // Clear the console
+
+         System.out.println("Player 1 starts with black and plays the first move.");
+
+        // Get players names
+        System.out.print("Name Of Player1 : ");
+        String name1 = scannerMain.nextLine();
+
+        System.out.print("Name Of Player2 : ");
+         String name2 = scannerMain.nextLine();
+
+        // Create Players
+        game.setPlayer1(new Human(name1, 1, game.getPlayerPiece())); // 1 = Black
+        game.setPlayer2(new Human(name2, 0, game.getPlayerPiece())); // 0 = White
+
+        game.setCurrentPlayer(game.getPlayer1());
+
+        ColorInConsole.clearScreen(); // Clear the console
+
+        // Play the game
+        game.playGame();
+    }
+
+    /**
+     * Starts a new game session where a human player competes against an AI opponent.
+     * 
+     * @param scannerMain is a scanner
+     * @param game the {@link GameEngine} instance managing the game state.
+     */
+    private void startAIGame(Scanner scannerMain,GameEngine game){
+        game.newGame(); // vs AI
+
+        ColorInConsole.clearScreen(); // Clear the console
+
+        // Get players names
+        System.out.print("Name Of Player1 : ");
+        String userName = scannerMain.nextLine();
+
+        // Create Players 
+        game.setPlayer1(new Human(userName, 1, game.getPlayerPiece())); // 1 = Black
+        game.setPlayer2(new AIPlayer("AI-Sam", 0, game.getWinLength(), game.getPlayerPiece())); // 0 = White
+
+        game.setCurrentPlayer(game.getPlayer1());
+
+        game.playGame();
+    }
+    
+    /**
+     * <p>
+     * Loads a previously saved game(which is choosen by the user from a list of saved games) from disk and resumes gameplay.
+     * </p>
+     *
+     * @param scannerMain is a Scanner 
+     * @param game the {@link GameEngine} instance 
+     */
+    private void loadSavedGame(Scanner scannerMain, GameEngine game){
+        ColorInConsole.clearScreen(); // Clear the console
+
+        // Load Game
+        SaveManager.listSavedGames();
+
+        System.out.print("Enter the filename to load (example: save.dat)\nOr press <q> to return to main menu: ");
+        String filename = scannerMain.nextLine().trim();
+
+        if (filename.equalsIgnoreCase("q")) {
+            System.out.println("Returning to main menu...");
+            return;
+        }
+                    
+        Object[] loadedData = SaveManager.loadGame(filename);
+
+
+    if (loadedData != null) {
+        game.setGrid((Grid) loadedData[0]);
+        game.setPlayer1((Player) loadedData[1]);
+        game.setPlayer2((Player) loadedData[2]);
+        game.setCurrentPlayer(game.getPlayer1());
+
+        // If player1 is a Human, reinitialize its Scanner
+        if (game.getPlayer1() instanceof Human) {
+            ((Human) game.getPlayer1()).resetScanner();
+        }
+
+        // If player2 is a Human, reinitialize its Scanner
+        if (game.getPlayer2() instanceof Human) {
+            ((Human) game.getPlayer2()).resetScanner();
+        }
+
+        // Display loaded game attributes
+        System.out.println(
+            "Grid Size: " + game.getGridSize() + "\n" +
+            "Win Length: " + game.getWinLength() + "\n" +
+            "Player 1: " + game.getPlayer1().getName() + "\n" +
+            "Player 2: " + game.getPlayer2().getName()
+        );
+
+        game.resumeGame(); // Resume the game
+        } else {
+            System.out.println(ColorInConsole.Red + "Failed to load the game." + ColorInConsole.Reset);
+            pressToContinue(scannerMain);// press anything to continue
         }
     }
 
@@ -270,13 +277,10 @@ public class Gomoku {
      * Exiting this menu returns the user to the main menu.
      * </p>
      *
-     * @param game the {@link app.GameEngine} instance whose settings will be modified
-     * @see app.GameEngine#setGridSize(int)
-     * @see app.GameEngine#setWinLength(int)
-     * @see app.GameEngine#setPlayerPiece(int)
-     * @see app.GameEngine#setExpandableGrid(boolean)
+     * @param game the {@link app.GameEngine} instance 
      */
-    public void settingsMenu(GameEngine game) {
+    private void settingsMenu(GameEngine game) {
+        ColorInConsole.clearScreen(); // Clear the console
 
         Scanner scanner = new Scanner(System.in);
 
@@ -304,14 +308,14 @@ public class Gomoku {
             System.out.println(curentSettings);
             System.out.print(settingsMenu);
 
-            int option = scanner.nextInt();
-            scanner.nextLine(); // consume newline
+            int option = safeNextInt(scanner); // use safeNextInt to read the integer safely
+
 
             switch (option) {
                 case 1:
                     System.out.print("Enter new grid size (odd number >= 3): ");
-                    int newSize = scanner.nextInt();
-                    scanner.nextLine(); // consume newline
+                    int newSize = safeNextInt(scanner);
+
                     if (newSize >= 3 && newSize % 2 == 1) {
                         game.setGridSize(newSize);
                         System.out.println(ColorInConsole.Green + "Grid size set to " + newSize + ColorInConsole.Reset);
@@ -336,8 +340,8 @@ public class Gomoku {
 
                 case 2:
                     System.out.print("Enter new win length (>= 3): ");
-                    int newWinLength = scanner.nextInt();
-                    scanner.nextLine(); // consume newline
+                    int newWinLength = safeNextInt(scanner);
+
                 
                     if (newWinLength >= 3) {
                         game.setWinLength(newWinLength);
@@ -363,8 +367,7 @@ public class Gomoku {
 
                 case 3:
                     System.out.print("Enter number of pieces each player starts with (> 0): ");
-                    int newPieceCount = scanner.nextInt();
-                    scanner.nextLine(); // consume newline
+                    int newPieceCount = safeNextInt(scanner); // use safeNextInt to read the integer safely 
                     if (newPieceCount > 0) {
                         game.setPlayerPiece(newPieceCount);
                         System.out.println(ColorInConsole.Green +"Each player will now start with " + newPieceCount + " pieces." + ColorInConsole.Reset);
@@ -403,8 +406,7 @@ public class Gomoku {
 
 
     /**
-     * Displays a "Press anything to continue..." message
-     * and waits for the user to press Enter.
+     * A method to make belaive the user is waiting for him but instead he is waiting for an input.
      *
      * @param scanner the Scanner object to read input
      */
@@ -414,14 +416,25 @@ public class Gomoku {
     }
 
     /**
+     * Safely reads an integer and consumes newline afterward.
+     * (Because nextInt() leaves a trailing \n which messes up nextLine()).
+     *
+     * @param scanner the Scanner object to read input
+     * @return integer input 
+     */
+    public static int safeNextInt(Scanner scanner) {
+        int value = scanner.nextInt();
+        scanner.nextLine(); // Always consume newline
+        return value;
+    }
+
+    /**
      * Entry point of the Gomoku application.
     * <p>
     * This method creates an instance of {@link app.Gomoku} and launches the main menu,
     * allowing the user to start playing the game, load a saved game, or access settings.
     * </p>
     * @param args command-line arguments (not used)
-    *
-    * @see app.Gomoku#showMainMenu()
     */
     public static void main(String[] args) {
         Gomoku launcher = new Gomoku();
