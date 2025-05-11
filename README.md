@@ -182,6 +182,32 @@ Gomoku-Game-Projet/
 
 ---
 
+## 🚧 Will Be Added
+
+These features and improvements are under consideration or planned for future versions:
+
+- **A Better Save/Load System interface**
+  A more user-friendly save/load interface
+
+- **Smarter AI**:  
+  A more advanced decision-making engine using **Minimax** with **Alpha-Beta pruning** is being explored to replace the current scoring-based AI system (`AIPlayer` class).
+
+- **Multiplayer Extension**:  
+  The current `SaveManager` implementation assumes two players. Future versions may introduce support for **multiple players** via dynamic serialization (e.g., list-based deserialization).
+
+- **Grid Visualization Enhancements**:  
+  Potential improvements in visual display, including an **interactive GUI** (JavaFX or Swing), or at least grid visualization with **coordinate legends**.
+
+- **AI Strategy Tuning Panel**:  
+  A settings menu allowing users to adjust AI behavior (defensive, balanced, aggressive) dynamically.
+
+- **Game Statistics and Replay System**:  
+  Ability to view game history, statistics (e.g., move counts, time per move), or replay previous games.
+
+- **Online Play Mode**:  
+  Investigating socket-based multiplayer via Java networking for LAN or remote play.
+
+---
 
 ## Author
 
